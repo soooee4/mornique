@@ -1,0 +1,74 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.rainbow-header {
+  background-image: linear-gradient(to right, #F94144, #F3722C, #F9C74F, #90BE6D, #57BED6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-align: center;
+  /* font-size: 3.75vw; */
+  font-size: 43px;
+}
+
+.playground {
+  width: calc(37.5px * 18);
+  height: calc(37.5px * 9);
+  border: 1px solid #ccc;
+  position: relative;
+  overflow: hidden;
+}
+.playground > div {
+  border-radius: 375px 375px 0 0;
+  position: absolute;
+  bottom: 0;  /* All divs are aligned to the bottom */
+  transform-origin: bottom center;  /* Rotation from the bottom center */
+  animation-name: myMove;
+  animation-duration: var(--animation-duration);
+  animation-fill-mode: forwards;
+  transform: rotate(-180deg);
+}
+
+#red {
+  width: 100%;  /* Full width of the playground */
+  height: calc(37.5px * 9);
+  background-color: var(--base-color);
+}
+#orange {
+  width: 83.3%;  /* Slightly less than full width */
+  height: calc(37.5px * 7.5);
+  left: 8.35%;  /* Center the div */
+  background-color: orange;
+}
+#yellow {
+  width: 66.6%;  /* Smaller width */
+  height: calc(37.5px * 6);
+  left: 16.7%;  /* Center the div */
+  background-color: yellow;
+}
+#green {
+  width: 50%;  /* Half the width */
+  height: calc(37.5px * 4.5);
+  left: 25%;  /* Center the div */
+  background-color: green;
+}
+#blue {
+  width: 33.3%;  /* Smaller still */
+  height: calc(37.5px * 3);
+  left: 33.35%;  /* Center the div */
+  background-color: lightBlue;
+}
+#middle {
+  width: 16%;  /* The smallest width */
+  height: calc(37.5px * 1.5);
+  left: 42%;  /* Center the div perfectly */
+  background-color: white;
+  transform: rotate(0); /* No rotation to keep it flat and centered */
+}
+
+@keyframes myMove {
+  0% { transform: rotate(-180deg); }
+  100% { transform: rotate(0deg); }
+}

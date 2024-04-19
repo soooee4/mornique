@@ -1,24 +1,14 @@
-import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import CompleteDisplay from './components/CompleteDisplay';
+import CustomRainBow from './components/CustomRainbow';
+import InitialRainbow from './components/InitialRainbow';
+import RoutineModal from './components/RoutineModal';
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+     <InitialRainbow />
+     <CustomRainBow />
     </div>
   );
 }
