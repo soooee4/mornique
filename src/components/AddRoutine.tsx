@@ -281,7 +281,6 @@ const AddRoutine = (props: AddRoutineProps) => {
 					</TaskRow>
 				))}
 			</TaskList>
-			{/* <button onClick={props.onClick}>Done</button> */}
 		</>
 	);
 };

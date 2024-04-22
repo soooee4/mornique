@@ -1,19 +1,35 @@
 import React from "react";
 import styled, { css, keyframes } from "styled-components";
+import LogoText from "./LogoBtn";
+import LogoBtn from "./LogoBtn";
+
+const CenteredContainer = styled.div`
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	height: 100vh;
+	width: 100vw;
+	min-width: calc(37.5px * 18);
+	overflow: hidden;
+`;
+
+// 전체 영역
+const Wrapper = styled.div`
+	min-width: calc(37.5px * 18);
+	height: calc(37.5px * 9.1);
+	position: relative;
+	/* margin: auto;  */
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	overflow: hidden;
+`;
 
 // 애니메이션 회전
 const rotate = keyframes`
   from { transform: rotate(-180deg); }
   to { transform: rotate(0deg); }
-`;
-
-// 전체 영역
-const Wrapper = styled.div`
-	width: calc(37.5px * 18);
-	height: calc(37.5px * 9.1);
-	border: 1px solid #000000;
-	position: relative;
-	overflow: hidden;
 `;
 
 // 무지개 영역
@@ -42,13 +58,13 @@ const RainbowDiv = styled.div<{
 	background-color: ${(props) => props.customColor};
 `;
 
-const InitialRainbow = (props:any) => {
-  // 사용자에게 입력받을 타이머 시간과 색상
-	const duration1 = 0.8;
-	const duration2 = 1.1;
-	const duration3 = 1.4;
-	const duration4 = 1.7;
-	const duration5 = 2;
+const InitialRainbow = (props: any) => {
+	// 첫 화면 색상, 애니메이션 고정값
+	const duration1 = 1.2;
+	const duration2 = 1.7;
+	const duration3 = 2.2;
+	const duration4 = 2.6;
+	const duration5 = 3.1;
 
 	const color1 = "#6A4C93";
 	const color2 = "#1982C4";
@@ -58,51 +74,53 @@ const InitialRainbow = (props:any) => {
 
 	return (
 		<>
-			<Wrapper>
-				<RainbowDiv
-					customDuration={duration5}
-					customColor={color5}
-					width={100}
-					height="calc(37.5px * 9.1)"
-				/>
-				<RainbowDiv
-					customDuration={duration4}
-					customColor={color4}
-					width={83.3}
-					height="calc(37.5px * 7.6)"
-					left={8.35}
-				/>
-				<RainbowDiv
-					customDuration={duration3}
-					customColor={color3}
-					width={66.6}
-					height="calc(37.5px * 6)"
-					left={16.7}
-				/>
-				<RainbowDiv
-					customDuration={duration2}
-					customColor={color2}
-					width={50}
-					height="calc(37.5px * 4.5)"
-					left={25}
-				/>
-				<RainbowDiv
-					customDuration={duration1}
-					customColor={color1}
-					width={33.3}
-					height="calc(37.5px * 3)"
-					left={33.35}
-				/>
-				<RainbowDiv
-					customDuration={duration1}
-					customColor="white"
-					width={16}
-					height="calc(37.5px * 1.5)"
-					left={42}
-					noRotate={true}
-				/>
-			</Wrapper>
-        <button onClick={props.onClick}>START</button>
+			<CenteredContainer>
+				<Wrapper>
+					<RainbowDiv
+						customDuration={duration5}
+						customColor={color5}
+						width={100}
+						height="calc(37.5px * 9.1)"
+					/>
+					<RainbowDiv
+						customDuration={duration4}
+						customColor={color4}
+						width={83.3}
+						height="calc(37.5px * 7.6)"
+						left={8.35}
+					/>
+					<RainbowDiv
+						customDuration={duration3}
+						customColor={color3}
+						width={66.6}
+						height="calc(37.5px * 6)"
+						left={16.7}
+					/>
+					<RainbowDiv
+						customDuration={duration2}
+						customColor={color2}
+						width={50}
+						height="calc(37.5px * 4.5)"
+						left={25}
+					/>
+					<RainbowDiv
+						customDuration={duration1}
+						customColor={color1}
+						width={33.3}
+						height="calc(37.5px * 3)"
+						left={33.35}
+					/>
+					<RainbowDiv
+						customDuration={duration1}
+						customColor="white"
+						width={16}
+						height="calc(37.5px * 1.5)"
+						left={42}
+						noRotate={true}
+					/>
+				</Wrapper>
+				<LogoBtn onClick={props.onClick} />
+			</CenteredContainer>
 		</>
 	);
 };
