@@ -28,9 +28,14 @@ interface ModalOverlayProps {
 }
 
 const ModalOverlay= (props: ModalOverlayProps) => {
+
+  const stopPropagation = (e: React.MouseEvent) => {
+    e.stopPropagation();
+  }
+
   return (
-    <Overlay>
-      <ModalContent> 
+    <Overlay onClick={props.onClick}>
+      <ModalContent onClick={stopPropagation}> 
         {props.children}
       </ModalContent>
     </Overlay>

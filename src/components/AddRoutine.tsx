@@ -63,14 +63,38 @@ const Colon = styled.span`
 	margin: 0 10px 0 10px;
 `;
 
-// color 선택
+// color 선택 
 const PickColor = styled.div<{ pickColor: string }>`
-	min-width: 30px;
-	height: 20px;
-	background-color: ${(props) => props.pickColor};
-	cursor: pointer;
-	border-radius: 3px;
-	margin-left: 30px;
+  position: relative;
+  width: 30px;
+  height: 45px;
+  background-color: transparent; 
+  margin-left: 30px;
+  cursor: pointer;
+
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    width: 17px;
+    height: 28px;
+    background-color: ${(props) => props.pickColor};
+  }
+
+  &::before {
+    top: 7px;
+    left: 0px; 
+    border-radius: 50px 40px 0px 0px; 
+    transform: rotate(-45deg);
+  }
+
+  &::after {
+    top: 7px;
+    left: 8px;
+    border-radius: 40px 50px 0px 0px; 
+    transform: rotate(45deg);
+  }
 `;
 
 // task 추가 버튼
