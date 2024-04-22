@@ -8,7 +8,6 @@ import message from "./message";
 const Wrapper = styled.div`
 	width: 100%;
 	box-sizing: border-box;
-	display: flex;
 	flex-direction: column;
 	align-items: center;
 `;
@@ -16,16 +15,16 @@ const Wrapper = styled.div`
 const InputContainer = styled.div`
 	display: flex;
 	align-items: center;
-	width: 80%;
 `;
 
 // 사용자 task 입력
 const Input = styled.input`
 	font-size: 17px;
-	min-width: 350px;
+	min-width: 400px;
 	padding: 12px;
-	margin-right: 30px;
-	flex-grow: 1;
+	margin-right: 20px;
+	margin-left: 10px;
+	/* flex-grow: 1; */
 	outline: none;
 	border: 1px solid #ccc;
 	border-radius: 10px;
@@ -36,8 +35,8 @@ const Input = styled.input`
 `;
 
 const TimeInput = styled.input`
-	width: 40px;
-	height: 40px;
+	min-width: 40px;
+	min-height: 42px;
 	text-align: center;
 	font-size: 16px;
 	outline: none;
@@ -104,14 +103,13 @@ const Button = styled.button`
 `;
 
 const TaskList = styled.div`
-	margin-top: 20px;
-	margin-left: 10px;
-	width: 100%;
+	margin-top: 40px;
 `;
 
 const TaskTime = styled.span`
 	color: white;
 	font-weight: bold;
+	min-width: 90px;
 `;
 
 const TaskName = styled.div`
@@ -120,6 +118,7 @@ const TaskName = styled.div`
 	width: 350px;
 	display: flex;
 	justify-content: flex-start;
+	margin-left: 20px;
 `;
 
 // 하나의 task 담고있는 영역
@@ -128,10 +127,9 @@ const TaskRow = styled.div`
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	width: 80%;
-	padding: 10px;
-	margin-bottom: 5px;
-	border-radius: 5px;
+	border-radius: 10px;
+	padding: 8px 15px;
+	margin: 10px 10px;
 `;
 
 // task 삭제 버튼
