@@ -1,15 +1,32 @@
-import './App.css';
-import { InitialRainbow, CustomRainbow, AddRoutine } from './components';
-
+import React, { useState } from "react";
+import "./App.css";
+import {
+	InitialRainbow,
+	CustomRainbow,
+	AddRoutine,
+	RoutineModal,
+} from "./components";
 
 function App() {
-  return (
-    <div className="App">
-     <InitialRainbow />
-     <CustomRainbow />
-     <AddRoutine />
-    </div>
-  );
+
+  const [state, setState] = useState('initial');
+  const [modal, setModal] = useState(false);
+
+	return (
+		<div className="App">
+			{state === "initial" && <InitialRainbow onClick={() => setModal(true)} />}
+			{state === "custom" && <CustomRainbow />}
+
+			{modal && (
+				<AddRoutine
+					onClick={() => {
+						setState("custom");
+						setModal(false);
+					}}
+				/>
+			)}
+		</div>
+	);
 }
 
 export default App;

@@ -9,5 +9,5 @@ export {
   AddRoutine,
   CustomRainbow,
   InitialRainbow,
-  RoutineModal
+  RoutineModal,
 };

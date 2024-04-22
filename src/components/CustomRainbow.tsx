@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from 'react';
 import styled, { css, keyframes } from "styled-components";
 
 // 애니메이션 회전
@@ -42,19 +42,24 @@ const RainbowDiv = styled.div<{
 	background-color: ${(props) => props.customColor};
 `;
 
-const CustomRainbow: React.FC = () => {
-  // 사용자에게 입력받을 타이머 시간과 색상
-	const duration1 = 10;
-	const duration2 = 15;
-	const duration3 = 20;
-	const duration4 = 25;
-	const duration5 = 30;
+const CustomRainbow = () => {
 
-	const color1 = "#6A4C93";
-	const color2 = "#1982C4";
-	const color3 = "#8AC926";
-	const color4 = "#FFCA3A";
-	const color5 = "#FF595E";
+  const routine = JSON.parse(window.localStorage.getItem("routines") || "[]");
+
+
+  // 사용자에게 입력받을 타이머 시간과 색상
+	const duration1 = routine[0].totalSeconds;
+	const duration2 = routine[1].totalSeconds;
+	const duration3 = routine[2].totalSeconds;
+	const duration4 = routine[3] && routine[3].totalSeconds;
+	const duration5 = routine[4] && routine[4].totalSeconds;
+
+	const color1 = routine[0].color;
+	const color2 = routine[1].color;
+	const color3 = routine[2].color;
+	const color4 = routine[3] && routine[3].color;
+	const color5 = routine[4] && routine[4].color;
+
 
 	return (
 		<>

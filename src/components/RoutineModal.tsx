@@ -1,10 +1,11 @@
 import React from 'react';
+import AddRoutine from './AddRoutine'
 
 const RoutineModal = () => {
   
   return (
     <>
-      RoutineModal
+      {/* <AddRoutine /> */}
     </>
   )
 }

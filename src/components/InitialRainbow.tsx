@@ -42,7 +42,7 @@ const RainbowDiv = styled.div<{
 	background-color: ${(props) => props.customColor};
 `;
 
-const InitialRainbow: React.FC = () => {
+const InitialRainbow = (props:any) => {
   // 사용자에게 입력받을 타이머 시간과 색상
 	const duration1 = 0.8;
 	const duration2 = 1.1;
@@ -102,6 +102,7 @@ const InitialRainbow: React.FC = () => {
 					noRotate={true}
 				/>
 			</Wrapper>
+        <button onClick={props.onClick}>START</button>
 		</>
 	);
 };
