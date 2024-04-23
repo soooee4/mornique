@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { getRandomColor } from "../util";
 import message from "./message";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 /* style 정의 */
 
@@ -63,38 +65,38 @@ const Colon = styled.span`
 	margin: 0 10px 0 10px;
 `;
 
-// color 선택 
+// color 선택
 const PickColor = styled.div<{ pickColor: string }>`
-  position: relative;
-  width: 30px;
-  height: 45px;
-  background-color: transparent; 
-  margin-left: 30px;
-  cursor: pointer;
+	position: relative;
+	width: 30px;
+	height: 45px;
+	background-color: transparent;
+	margin-left: 30px;
+	cursor: pointer;
 
-  &::before,
-  &::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    width: 17px;
-    height: 28px;
-    background-color: ${(props) => props.pickColor};
-  }
+	&::before,
+	&::after {
+		content: "";
+		position: absolute;
+		top: 0;
+		width: 17px;
+		height: 28px;
+		background-color: ${(props) => props.pickColor};
+	}
 
-  &::before {
-    top: 7px;
-    left: 0px; 
-    border-radius: 50px 40px 0px 0px; 
-    transform: rotate(-45deg);
-  }
+	&::before {
+		top: 7px;
+		left: 0px;
+		border-radius: 50px 40px 0px 0px;
+		transform: rotate(-45deg);
+	}
 
-  &::after {
-    top: 7px;
-    left: 8px;
-    border-radius: 40px 50px 0px 0px; 
-    transform: rotate(45deg);
-  }
+	&::after {
+		top: 7px;
+		left: 8px;
+		border-radius: 40px 50px 0px 0px;
+		transform: rotate(45deg);
+	}
 `;
 
 // task 추가 버튼
@@ -208,8 +210,14 @@ const AddRoutine = (props: AddRoutineProps) => {
 		setRoutine(storedRoutine);
 	}, []);
 
+	// toast 세팅
+	const notify = () => toast("You can set the time for up to 30min :D");
+
 	// + 버튼 클릭 시 실행 함수
 	const onClickAddBtn = () => {
+		// toast 사용
+		notify();
+
 		// 입력받은 분, 초를 초로 변환
 		const totalMinutes = parseInt(minutes, 10) || 0;
 		const totalSeconds = parseInt(seconds, 10) || 0;
@@ -231,7 +239,7 @@ const AddRoutine = (props: AddRoutineProps) => {
 		reindexRoutine(updatedRoutine);
 	};
 
-	const reindexRoutine = (updatedRoutine: Routine[]) => {
+	const reindexRoutine = (updatedRoutine: Routine[]) => { t
 		const reindexedRoutine = updatedRoutine.map((routine, index) => ({
 			...routine,
 			id: index + 1,
@@ -252,12 +260,20 @@ const AddRoutine = (props: AddRoutineProps) => {
 
 	return (
 		<>
+			<ToastContainer
+				position="top-center"
+				autoClose={2000}
+				closeButton={false}
+				closeOnClick
+				theme="light"
+				limit={1}
+			/>
 			<Wrapper>
 				<InputContainer>
 					<Input
 						type="text"
 						placeholder={message.AskTaskName}
-						maxLength={50}
+						maxLength={30}
 						value={taskName}
 						onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
 							setTaskName(e.target.value)
