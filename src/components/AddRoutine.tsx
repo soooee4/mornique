@@ -239,7 +239,7 @@ const AddRoutine = (props: AddRoutineProps) => {
 		reindexRoutine(updatedRoutine);
 	};
 
-	const reindexRoutine = (updatedRoutine: Routine[]) => { t
+	const reindexRoutine = (updatedRoutine: Routine[]) => {
 		const reindexedRoutine = updatedRoutine.map((routine, index) => ({
 			...routine,
 			id: index + 1,
