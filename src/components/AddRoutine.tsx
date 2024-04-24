@@ -8,25 +8,43 @@ import "react-toastify/dist/ReactToastify.css";
 /* style 정의 */
 
 const Wrapper = styled.div`
+	display: flex;
 	width: 100%;
 	box-sizing: border-box;
 	flex-direction: column;
-	align-items: center;
 `;
 
 const InputContainer = styled.div`
 	display: flex;
+	width: 100%;
 	align-items: center;
+	flex-direction: row;
+
+	@media (max-width: 1000px) {
+		flex-direction: column;
+		align-items: flex-start;
+	}
+`;
+
+const FlexContainer = styled.div`
+	display: flex;
+	flex-direction: row;
+	margin-left: auto;
+	justify-content: flex-end;
+
+	@media (max-width: 1000px) {
+		margin-top: 10px;
+	}
 `;
 
 // 사용자 task 입력
 const Input = styled.input`
+	box-sizing: border-box;
 	font-size: 17px;
-	min-width: 400px;
+	flex-grow: 1;
+	width: 100%;
 	padding: 12px;
 	margin-right: 20px;
-	margin-left: 10px;
-	/* flex-grow: 1; */
 	outline: none;
 	border: 1px solid #ccc;
 	border-radius: 10px;
@@ -52,6 +70,12 @@ const TimeInput = styled.input`
 		-webkit-appearance: none;
 		margin: 0;
 	}
+
+	@media (max-width: 1000px) {
+		font-size: 13px;
+		padding: 0;
+		height: 10px;
+	}
 `;
 
 // task 순서 표기 text
@@ -63,6 +87,10 @@ const OrderText = styled.span`
 // 분:초 단위로 표시하기 위한 colon
 const Colon = styled.span`
 	margin: 0 10px 0 10px;
+	@media (max-width: 1000px) {
+		padding-top: 10px;
+		margin: 0 7px;
+	}
 `;
 
 // color 선택
@@ -97,6 +125,10 @@ const PickColor = styled.div<{ pickColor: string }>`
 		border-radius: 40px 50px 0px 0px;
 		transform: rotate(45deg);
 	}
+
+	@media (max-width: 1000px) {
+		margin-left: 25px;
+	}
 `;
 
 // task 추가 버튼
@@ -126,6 +158,9 @@ const Button = styled.button`
 			}
 		}
 	}
+	@media (max-width: 1000px) {
+		margin-left: 7px;
+	}
 `;
 
 const TaskList = styled.div`
@@ -136,6 +171,11 @@ const TaskTime = styled.span`
 	color: white;
 	font-weight: bold;
 	min-width: 90px;
+	margin-left: 10px;
+
+	@media (max-width: 1000px) {
+		display: none;
+	}
 `;
 
 const TaskName = styled.div`
@@ -154,8 +194,9 @@ const TaskRow = styled.div`
 	justify-content: space-between;
 	align-items: center;
 	border-radius: 10px;
-	padding: 8px 15px;
+	padding: 8px 20px;
 	margin: 10px 10px;
+	min-height: 35px;
 `;
 
 // task 삭제 버튼
@@ -177,6 +218,10 @@ const DeleteButton = styled.button`
 	&:hover {
 		background-color: ${(props) => props.color};
 		color: black;
+	}
+
+	@media (max-width: 1000px) {
+		display: none;
 	}
 `;
 
@@ -279,32 +324,34 @@ const AddRoutine = (props: AddRoutineProps) => {
 							setTaskName(e.target.value)
 						}
 					/>
-					<TimeInput
-						type="number"
-						placeholder="mm"
-						value={minutes}
-						onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-							setMinutes(e.target.value)
-						}
-						maxLength={2}
-						onWheel={(e) => e.preventDefault()}
-						min={0}
-						max={30}
-					/>
-					<Colon>:</Colon>
-					<TimeInput
-						type="number"
-						placeholder="ss"
-						value={seconds}
-						onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-							setSeconds(e.target.value)
-						}
-						maxLength={2}
-						min={0}
-						max={59}
-					/>
-					<PickColor pickColor={color} onClick={onClickColor}></PickColor>
-					<Button onClick={onClickAddBtn}>➕</Button>
+					<FlexContainer>
+						<TimeInput
+							type="number"
+							placeholder="mm"
+							value={minutes}
+							onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+								setMinutes(e.target.value)
+							}
+							maxLength={2}
+							onWheel={(e) => e.preventDefault()}
+							min={0}
+							max={30}
+						/>
+						<Colon>:</Colon>
+						<TimeInput
+							type="number"
+							placeholder="ss"
+							value={seconds}
+							onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+								setSeconds(e.target.value)
+							}
+							maxLength={2}
+							min={0}
+							max={59}
+						/>
+						<PickColor pickColor={color} onClick={onClickColor}></PickColor>
+						<Button onClick={onClickAddBtn}>➕</Button>
+					</FlexContainer>
 				</InputContainer>
 			</Wrapper>
 			<TaskList>
