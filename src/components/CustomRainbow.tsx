@@ -7,13 +7,23 @@ const rotate = keyframes`
   to { transform: rotate(0deg); }
 `;
 
+const CenteredContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+`;
+
 // 전체 영역
 const Wrapper = styled.div`
 	width: calc(37.5px * 18);
 	height: calc(37.5px * 9.1);
-	border: 1px solid #000000;
 	position: relative;
 	overflow: hidden;
+  margin: auto; 
 `;
 
 // 무지개 영역
@@ -63,6 +73,7 @@ const CustomRainbow = () => {
 
 	return (
 		<>
+        <CenteredContainer>
 			<Wrapper>
 				<RainbowDiv
 					customDuration={duration5}
@@ -107,6 +118,7 @@ const CustomRainbow = () => {
 					noRotate={true}
 				/>
 			</Wrapper>
+      </CenteredContainer>
 		</>
 	);
 };

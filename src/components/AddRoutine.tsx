@@ -12,6 +12,12 @@ const Wrapper = styled.div`
 	width: 100%;
 	box-sizing: border-box;
 	flex-direction: column;
+	height: 100%;
+`;
+
+const MainContent = styled.div`
+	flex-grow: 1;
+	overflow: auto;
 `;
 
 const InputContainer = styled.div`
@@ -207,7 +213,6 @@ const DeleteButton = styled.button`
 	color: white;
 	border: none;
 	font-weight: bolder;
-	border-radius: 50%;
 	cursor: pointer;
 	font-size: 15px;
 	display: flex;
@@ -226,6 +231,19 @@ const DeleteButton = styled.button`
 	}
 `;
 
+// 루틴 완성 후 Done 버튼
+const DoneButton = styled.button`
+	padding: 4px 6px;
+	background-color: transparent;
+	color: Black;
+	display: block;
+	font-weight: bolder;
+	cursor: pointer;
+	font-size: 15px;
+	align-self: flex-end;
+  border: none;
+`;
+
 /* type 정의 */
 interface Routine {
 	id: number;
@@ -241,8 +259,8 @@ interface AddRoutineProps {
 
 const AddRoutine = (props: AddRoutineProps) => {
 	const [taskName, setTaskName] = useState("");
-  const [minutes, setMinutes] = useState("");
-  const [seconds, setSeconds] = useState("");
+	const [minutes, setMinutes] = useState("");
+	const [seconds, setSeconds] = useState("");
 	const [color, setColor] = useState("#FF595E");
 	const [routine, setRoutine] = useState<Routine[]>([]);
 
@@ -251,42 +269,43 @@ const AddRoutine = (props: AddRoutineProps) => {
 	// 랜더링 시 tasks 재조회
 	useEffect(() => {
 		const storedRoutine = JSON.parse(
-			window.localStorage.getItem("routine") || "[]"
+			window.localStorage.getItem("routines") || "[]"
 		) as Routine[];
 		setRoutine(storedRoutine);
 	}, []);
 
 	// toast 호출 함수
-	const notify = (msg :string) => toast(`${msg}`);
+	const notify = (msg: string) => toast(`${msg}`);
 
 	// + 버튼 클릭 시 실행 함수
 	const onClickAddBtn = () => {
+		const totalMinutes = parseInt(minutes, 10) || 0;
+		const totalSeconds = parseInt(seconds, 10) || 0;
+		const secondsTotal = totalMinutes * 60 + totalSeconds;
 
-    const totalMinutes = parseInt(minutes, 10) || 0;
-    const totalSeconds = parseInt(seconds, 10) || 0;
-    const secondsTotal = totalMinutes * 60 + totalSeconds;
+		const formattedTime = `${minutes.toString().padStart(2, "0")}:${seconds
+			.toString()
+			.padStart(2, "0")}`;
 
-    const formattedTime = `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
-
-    /* 사용자 입력 유효성 검사 */
-    // 내용 미 입력 시 toast 알림
-    if (taskName.length === 0) {
+		/* 사용자 입력 유효성 검사 */
+		// 내용 미 입력 시 toast 알림
+		if (taskName.length === 0) {
 			notify(message.ERROR_EMPTY_TASK_NAME);
 			return;
 
-    // 30분 이상일 경우 30분으로 설정 및 toast 알림
+			// 30분 이상일 경우 30분으로 설정 및 toast 알림
 		} else if (secondsTotal > 1800) {
 			notify(message.ERROR_VALIDATIN_TAST_TIME);
 			setMinutes("30");
 			setSeconds("00");
 			return;
 
-    // 시간 미 설정 시 toast 알림
+			// 시간 미 설정 시 toast 알림
 		} else if (secondsTotal === 0) {
 			notify(message.ERROR_EMPTY_TASK_TIME);
 			return;
 
-      // 유효성검사 통과 시 add 로직 실행
+			// 유효성검사 통과 시 add 로직 실행
 		} else {
 			const newRoutine: Routine = {
 				id: routine.length + 1,
@@ -298,7 +317,8 @@ const AddRoutine = (props: AddRoutineProps) => {
 
 			const updatedRoutine = [...routine, newRoutine];
 			reindexRoutine(updatedRoutine);
-		}};
+		}
+	};
 
 	const reindexRoutine = (updatedRoutine: Routine[]) => {
 		const reindexedRoutine = updatedRoutine.map((routine, index) => ({
@@ -330,58 +350,63 @@ const AddRoutine = (props: AddRoutineProps) => {
 				limit={1}
 			/>
 			<Wrapper>
-				<InputContainer>
-					<Input
-						type="text"
-						placeholder={message.ASK_TASK_NAME}
-						maxLength={30}
-						value={taskName}
-						onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-							setTaskName(e.target.value)
-						}
-					/>
-					<FlexContainer>
-						<TimeInput
-							type="number"
-							placeholder="mm"
-							value={minutes}
+				<MainContent>
+					<InputContainer>
+						<Input
+							type="text"
+							placeholder={message.ASK_TASK_NAME}
+							maxLength={30}
+							value={taskName}
 							onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-								setMinutes(e.target.value)
+								setTaskName(e.target.value)
 							}
-							maxLength={2}
-							onWheel={(e) => e.preventDefault()}
-							min={0}
-							max={30}
 						/>
-						<Colon>:</Colon>
-						<TimeInput
-							type="number"
-							placeholder="ss"
-							value={seconds}
-							onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-								setSeconds(e.target.value)
-							}
-							maxLength={2}
-							min={0}
-							max={59}
-						/>
-						<PickColor pickColor={color} onClick={onClickColor}></PickColor>
-						<Button onClick={onClickAddBtn}>➕</Button>
-					</FlexContainer>
-				</InputContainer>
+						<FlexContainer>
+							<TimeInput
+								type="number"
+								placeholder="mm"
+								value={minutes}
+								onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+									setMinutes(e.target.value)
+								}
+								maxLength={2}
+								onWheel={(e) => e.preventDefault()}
+								min={0}
+								max={30}
+							/>
+							<Colon>:</Colon>
+							<TimeInput
+								type="number"
+								placeholder="ss"
+								value={seconds}
+								onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+									setSeconds(e.target.value)
+								}
+								maxLength={2}
+								min={0}
+								max={59}
+							/>
+							<PickColor pickColor={color} onClick={onClickColor}></PickColor>
+							{routine.length < 5 && (
+								<Button onClick={onClickAddBtn}>➕</Button>
+							)}
+						</FlexContainer>
+					</InputContainer>
+					<TaskList>
+						{routine.map((routine, index) => (
+							<TaskRow key={routine.id} color={routine.color}>
+								<OrderText>{orderList[index]}</OrderText>
+								<TaskName>{routine.name}</TaskName>
+								<TaskTime>for &nbsp;&nbsp; {routine.time}</TaskTime>
+								<DeleteButton onClick={() => onClickDeleteBtn(routine.id)}>
+									Delete
+								</DeleteButton>
+							</TaskRow>
+						))}
+					</TaskList>
+				</MainContent>
+				{routine.length > 2 && <DoneButton onClick={props.onClick}>Done!</DoneButton>}
 			</Wrapper>
-			<TaskList>
-				{routine.map((routine, index) => (
-					<TaskRow key={routine.id} color={routine.color}>
-						<OrderText>{orderList[index]}</OrderText>
-						<TaskName>{routine.name}</TaskName>
-						<TaskTime>for &nbsp;&nbsp; {routine.time}</TaskTime>
-						<DeleteButton onClick={() => onClickDeleteBtn(routine.id)}>
-							Delete
-						</DeleteButton>
-					</TaskRow>
-				))}
-			</TaskList>
 		</>
 	);
 };
