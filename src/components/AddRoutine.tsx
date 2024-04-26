@@ -158,6 +158,7 @@ const Button = styled.button`
 			}
 		}
 	}
+
 	@media (max-width: 1000px) {
 		margin-left: 7px;
 	}
@@ -240,8 +241,8 @@ interface AddRoutineProps {
 
 const AddRoutine = (props: AddRoutineProps) => {
 	const [taskName, setTaskName] = useState("");
-	const [minutes, setMinutes] = useState("");
-	const [seconds, setSeconds] = useState("");
+  const [minutes, setMinutes] = useState("");
+  const [seconds, setSeconds] = useState("");
 	const [color, setColor] = useState("#FF595E");
 	const [routine, setRoutine] = useState<Routine[]>([]);
 
@@ -255,34 +256,49 @@ const AddRoutine = (props: AddRoutineProps) => {
 		setRoutine(storedRoutine);
 	}, []);
 
-	// toast 세팅
-	const notify = () => toast("You can set the time for up to 30min :D");
+	// toast 호출 함수
+	const notify = (msg :string) => toast(`${msg}`);
 
 	// + 버튼 클릭 시 실행 함수
 	const onClickAddBtn = () => {
-		// toast 사용
-		notify();
 
-		// 입력받은 분, 초를 초로 변환
-		const totalMinutes = parseInt(minutes, 10) || 0;
-		const totalSeconds = parseInt(seconds, 10) || 0;
-		const secondsTotal = totalMinutes * 60 + totalSeconds;
+    const totalMinutes = parseInt(minutes, 10) || 0;
+    const totalSeconds = parseInt(seconds, 10) || 0;
+    const secondsTotal = totalMinutes * 60 + totalSeconds;
 
-		const formattedTime = `${minutes.padStart(2, "0")}:${seconds.padStart(
-			2,
-			"0"
-		)}`;
-		const newRoutine: Routine = {
-			id: routine.length + 1,
-			name: taskName,
-			color: color,
-			time: formattedTime,
-			totalSeconds: secondsTotal,
-		};
+    const formattedTime = `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
 
-		const updatedRoutine = [...routine, newRoutine];
-		reindexRoutine(updatedRoutine);
-	};
+    /* 사용자 입력 유효성 검사 */
+    // 내용 미 입력 시 toast 알림
+    if (taskName.length === 0) {
+			notify(message.ERROR_EMPTY_TASK_NAME);
+			return;
+
+    // 30분 이상일 경우 30분으로 설정 및 toast 알림
+		} else if (secondsTotal > 1800) {
+			notify(message.ERROR_VALIDATIN_TAST_TIME);
+			setMinutes("30");
+			setSeconds("00");
+			return;
+
+    // 시간 미 설정 시 toast 알림
+		} else if (secondsTotal === 0) {
+			notify(message.ERROR_EMPTY_TASK_TIME);
+			return;
+
+      // 유효성검사 통과 시 add 로직 실행
+		} else {
+			const newRoutine: Routine = {
+				id: routine.length + 1,
+				name: taskName,
+				color: color,
+				time: formattedTime,
+				totalSeconds: secondsTotal,
+			};
+
+			const updatedRoutine = [...routine, newRoutine];
+			reindexRoutine(updatedRoutine);
+		}};
 
 	const reindexRoutine = (updatedRoutine: Routine[]) => {
 		const reindexedRoutine = updatedRoutine.map((routine, index) => ({
@@ -317,7 +333,7 @@ const AddRoutine = (props: AddRoutineProps) => {
 				<InputContainer>
 					<Input
 						type="text"
-						placeholder={message.AskTaskName}
+						placeholder={message.ASK_TASK_NAME}
 						maxLength={30}
 						value={taskName}
 						onChange={(e: React.ChangeEvent<HTMLInputElement>) =>

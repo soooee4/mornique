@@ -42,8 +42,8 @@ const LogoBtn = (props: LogoBtnProps) => {
 
 	return (
 		<Wrapper onClick={props.onClick}>
-			<Text>{message.LogoText} </Text>
-			<GradientText>{message.Logo}</GradientText>
+			<Text>{message.LOGO_TEXT} </Text>
+			<GradientText>{message.LOGO}</GradientText>
 		</Wrapper>
 	);
 };

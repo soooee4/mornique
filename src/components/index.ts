@@ -2,7 +2,7 @@ import CompleteDisplay from "./CompleteDisplay";
 import AddRoutine from "./AddRoutine";
 import CustomRainbow from "./CustomRainbow";
 import InitialRainbow from "./InitialRainbow";
-import LogoText from "./LogoBtn";
+import LOGO_TEXT from "./LogoBtn";
 import ModalOverlay from './ModalOverlay';
 
 export {
@@ -10,6 +10,6 @@ export {
   AddRoutine,
   CustomRainbow,
   InitialRainbow,
-  LogoText,
+  LOGO_TEXT,
   ModalOverlay
 };

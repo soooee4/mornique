@@ -1,6 +1,6 @@
 import React from "react";
 import styled, { css, keyframes } from "styled-components";
-import LogoText from "./LogoBtn";
+import LOGO_TEXT from "./LogoBtn";
 import LogoBtn from "./LogoBtn";
 
 const CenteredContainer = styled.div`
