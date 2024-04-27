@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import styled, { css, keyframes } from "styled-components";
+import StartTimerBtn from "./StartTimerBtn";
 
 interface Routine {
 	name: string;
@@ -7,9 +8,7 @@ interface Routine {
 	color: string;
 }
 
-// CenteredContainer 스타일 정의
 const CenteredContainer = styled.div`
-	box-sizing: border-box;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
@@ -20,7 +19,6 @@ const CenteredContainer = styled.div`
 	overflow: hidden;
 `;
 
-// Wrapper 스타일 정의
 const Wrapper = styled.div`
 	min-width: calc(37.5px * 18);
 	height: calc(37.5px * 9.1);
@@ -31,27 +29,19 @@ const Wrapper = styled.div`
 	overflow: hidden;
 `;
 
-// TaskText 스타일 정의
-const TaskText = styled.p`
-	display: block;
-	font-size: 25px;
-`;
-
-// rotate 애니메이션 키 프레임 정의
 const rotate = keyframes`
   from { transform: rotate(-180deg); }
   to { transform: rotate(0deg); }
 `;
 
-// RainbowDiv 스타일 정의
 const RainbowDiv = styled.div<{
 	customDuration: number;
 	customColor: string;
 	width: number;
 	height: string;
 	left?: number;
-	zIndex: number;
 	noRotate?: boolean;
+	zIndex: number;
 }>`
 	border-radius: 375px 375px 0 0;
 	position: absolute;
@@ -71,43 +61,19 @@ const RainbowDiv = styled.div<{
 	z-index: ${(props) => props.zIndex};
 `;
 
-const CustomRainbow = () => {
+// const rainbows = [
+//   { customDuration: 3.1, customColor: "#6A4C93", width: 100, height: "calc(37.5px * 9.1)" },
+//   { customDuration: 2.6, customColor: "#1982C4", width: 83.3, height: "calc(37.5px * 7.6)", left: 8.35 },
+//   { customDuration: 2.2, customColor: "#8AC926", width: 66.6, height: "calc(37.5px * 6)", left: 16.7 },
+//   { customDuration: 1.7, customColor: "#FFCA3A", width: 50, height: "calc(37.5px * 4.5)", left: 25 },
+//   { customDuration: 1.2, customColor: "#FF595E", width: 33.3, height: "calc(37.5px * 3)", left: 33.35 },
+//   { customDuration: 0, customColor: "white", width: 16, height: "calc(37.5px * 1.5)", left: 42, noRotate: true }
+// ];
+
+const CustomFirstRainbow = (props: any) => {
 	const routine: Routine[] = JSON.parse(
 		window.localStorage.getItem("routines") || "[]"
 	);
-	const [currentRoutineIndex, setCurrentRoutineIndex] = useState(0); // 처리중인 현재 루틴의 인덱스
-	const [timeLeft, setTimeLeft] = useState(
-		routine[currentRoutineIndex]
-			? routine[currentRoutineIndex].totalSeconds * 1000
-			: 0
-	);
-	const [content, setContent] = useState("");
-
-	useEffect(() => {
-		// 현재 루틴의 남은 시간이 0 이하이고 마지막 루틴이 아니라면 다음 루틴으로 넘어감
-		if (timeLeft <= 0 && currentRoutineIndex < routine.length - 1) {
-			setCurrentRoutineIndex(currentRoutineIndex + 1);
-			setTimeLeft(routine[currentRoutineIndex + 1].totalSeconds * 1000);
-			setContent(routine[currentRoutineIndex + 1].name);
-		}
-	}, [timeLeft, currentRoutineIndex, routine]);
-
-	// 남은 시간 업데이트
-	useEffect(() => {
-		const timer = setInterval(() => {
-			setTimeLeft((prevTime) => prevTime - 1000);
-		}, 1000);
-		return () => clearInterval(timer);
-	}, []);
-
-	// 밀리초 단위의 시간을 분:초 형식으로 변환
-	const formatTime = (ms: number) => {
-		const seconds = Math.floor(ms / 1000) % 60;
-		const minutes = Math.floor(ms / 60000);
-		return `${minutes.toString().padStart(2, "0")}:${seconds
-			.toString()
-			.padStart(2, "0")}`;
-	};
 
 	return (
 		<>
@@ -116,13 +82,12 @@ const CustomRainbow = () => {
 					{routine.map((item, index) => (
 						<RainbowDiv
 							key={index}
-							customDuration={item.totalSeconds}
+							customDuration={[1.2, 1.7, 2.3, 2.8, 3.3][index]}
 							customColor={item.color}
 							width={[33.3, 50, 66.6, 83.3, 100][index]}
 							height={`calc(37.5px * ${[3, 4.5, 6, 7.6, 9.1][index]})`}
 							left={[33.35, 25, 16.7, 8.35, 0][index]}
 							zIndex={routine.length - index}
-							noRotate={index !== currentRoutineIndex}
 						/>
 					))}
 					<RainbowDiv
@@ -131,19 +96,13 @@ const CustomRainbow = () => {
 						width={16}
 						height="calc(37.5px * 1.5)"
 						left={42}
-						noRotate={true}
 						zIndex={999}
 					/>
 				</Wrapper>
-				<TaskText>
-					{/* {currentRoutineIndex < routine.length
-						? routine[currentRoutineIndex].name
-						: "완료"} */}
-				</TaskText>
-				{/* <StartTimerBtn onClick={() => setCurrentRoutineIndex(0)} /> */}
+        <StartTimerBtn />
 			</CenteredContainer>
 		</>
 	);
 };
 
-export default CustomRainbow;
+export default CustomFirstRainbow;

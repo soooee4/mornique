@@ -5,6 +5,7 @@ import {
 	CustomRainbow,
 	AddRoutine,
 	ModalOverlay,
+  CustomFirstRainbow
 } from "./components";
 
 function App() {
@@ -21,12 +22,13 @@ function App() {
 			)}
 			{/* state 값이 custom일 경우 사용자가 입력한 정보 기반의 rainbow 컴포넌트 노출 */}
 			{state === "custom" && <CustomRainbow />}
+      {state === "customFirst" && <CustomFirstRainbow />}
 
 			{modal && (
 				<ModalOverlay onClick={() => setModal(false)}>
 					<AddRoutine
 						onClick={() => {
-							setState("custom");
+							setState("customFirst");
 							setModal(false);
 						}}
 					/>

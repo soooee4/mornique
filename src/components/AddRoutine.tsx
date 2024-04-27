@@ -17,7 +17,6 @@ const Wrapper = styled.div`
 
 const MainContent = styled.div`
 	flex-grow: 1;
-	overflow: auto;
 `;
 
 const InputContainer = styled.div`
@@ -151,7 +150,7 @@ const Button = styled.button`
 	justify-content: center;
 	min-width: 40px;
 	height: 40px;
-	margin-left: 25px;
+	margin-left: 15px;
 	&:hover {
 		background-color: #f0f0f0;
 		animation: rotate 0.2s linear;
@@ -241,7 +240,7 @@ const DoneButton = styled.button`
 	cursor: pointer;
 	font-size: 15px;
 	align-self: flex-end;
-  border: none;
+	border: none;
 `;
 
 /* type 정의 */
@@ -295,7 +294,7 @@ const AddRoutine = (props: AddRoutineProps) => {
 
 			// 30분 이상일 경우 30분으로 설정 및 toast 알림
 		} else if (secondsTotal > 1800) {
-			notify(message.ERROR_VALIDATIN_TAST_TIME);
+			notify(message.ERROR_VALIDATION_TASK_TIME);
 			setMinutes("30");
 			setSeconds("00");
 			return;
@@ -405,7 +404,9 @@ const AddRoutine = (props: AddRoutineProps) => {
 						))}
 					</TaskList>
 				</MainContent>
-				{routine.length > 2 && <DoneButton onClick={props.onClick}>Done!</DoneButton>}
+				{routine.length > 2 && (
+					<DoneButton onClick={props.onClick}>Done!</DoneButton>
+				)}
 			</Wrapper>
 		</>
 	);

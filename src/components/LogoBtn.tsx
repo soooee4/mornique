@@ -35,7 +35,7 @@ const GradientText = styled.span`
 `;
 
 interface LogoBtnProps {
-	onClick: () => void;
+	onClick?: () => void;
 }
 
 const LogoBtn = (props: LogoBtnProps) => {

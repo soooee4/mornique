@@ -4,6 +4,8 @@ import CustomRainbow from "./CustomRainbow";
 import InitialRainbow from "./InitialRainbow";
 import LOGO_TEXT from "./LogoBtn";
 import ModalOverlay from './ModalOverlay';
+import StartTimerBtn from "./StartTimerBtn";
+import CustomFirstRainbow from "./CustomFirstRainbow";
 
 export {
   CompleteDisplay,
@@ -11,5 +13,7 @@ export {
   CustomRainbow,
   InitialRainbow,
   LOGO_TEXT,
-  ModalOverlay
+  ModalOverlay,
+  StartTimerBtn,
+  CustomFirstRainbow
 };
