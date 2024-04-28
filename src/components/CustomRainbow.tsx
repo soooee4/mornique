@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { start } from "repl";
 import styled, { css, keyframes } from "styled-components";
 
 interface Routine {
@@ -6,6 +7,16 @@ interface Routine {
 	totalSeconds: number;
 	color: string;
 }
+
+interface ReadyTimerProps {
+	show: boolean;
+}
+
+// rotate 애니메이션 키 프레임 정의
+const rotate = keyframes`
+  from { transform: rotate(-180deg); }
+  to { transform: rotate(0deg); }
+`;
 
 // CenteredContainer 스타일 정의
 const CenteredContainer = styled.div`
@@ -37,10 +48,16 @@ const TaskText = styled.p`
 	font-size: 25px;
 `;
 
-// rotate 애니메이션 키 프레임 정의
-const rotate = keyframes`
-  from { transform: rotate(-180deg); }
-  to { transform: rotate(0deg); }
+// TaskText 스타일 정의
+const LeftTimeText = styled.p`
+	display: block;
+	font-size: 25px;
+`;
+
+const ReadyTimer = styled.span<ReadyTimerProps>`
+	font-size: 50px;
+	color: black;
+	display: ${(props) => (props.show ? "block" : "none")};
 `;
 
 // RainbowDiv 스타일 정의
@@ -71,34 +88,68 @@ const RainbowDiv = styled.div<{
 	z-index: ${(props) => props.zIndex};
 `;
 
-const CustomRainbow = () => {
-	const routine: Routine[] = JSON.parse(
-		window.localStorage.getItem("routines") || "[]"
-	);
+const CustomRainbow = (props: any) => {
+	// 로컬 스토리지에 저장된 routine값
+	const routine: Routine[] = JSON.parse(window.localStorage.getItem("routines") || "[]");
+
+	const [newRoutine, setNewRoutine] = useState<Routine[]>([routine[0]] || []);
 	const [currentRoutineIndex, setCurrentRoutineIndex] = useState(0); // 처리중인 현재 루틴의 인덱스
+
 	const [timeLeft, setTimeLeft] = useState(
-		routine[currentRoutineIndex]
-			? routine[currentRoutineIndex].totalSeconds * 1000
+		newRoutine[currentRoutineIndex]
+			? newRoutine[currentRoutineIndex].totalSeconds * 1000
 			: 0
 	);
-	const [content, setContent] = useState("");
+
+	const [readyTime, setReadyTime] = useState(5); // 루틴 시작 전 5초 타이머
+	const [isShow, setIsShow] = useState(true); // 5초 타이머 노출 여부
+	const [animationKey, setAnimationKey] = useState(0); // 사용자 설정 타이머 시작 여부
 
 	useEffect(() => {
-		// 현재 루틴의 남은 시간이 0 이하이고 마지막 루틴이 아니라면 다음 루틴으로 넘어감
-		if (timeLeft <= 0 && currentRoutineIndex < routine.length - 1) {
+		const interval = setInterval(() => {
+			setReadyTime((currentReadyTime) => {
+				if (currentReadyTime <= 1) {
+					clearInterval(interval); 
+					setTimeout(() => setIsShow(false), 1000);
+					return 0;
+				}
+				return currentReadyTime - 1;
+			});
+		}, 1000);
+
+		return () => clearInterval(interval);
+	}, []);
+
+	useEffect(() => {
+		let timer: number | undefined;
+
+		if (timeLeft > 0 && !isShow) {
+			timer = window.setInterval(() => {
+				setTimeLeft((prevTime) => prevTime - 1000);
+			}, 1000);
+		} else if (timeLeft <= 0) {
+			if (timer) clearInterval(timer);
+			if (currentRoutineIndex < routine.length - 1) {
+				goToNextRoutine();
+			} else {
+				// 모든 루틴 완료되면 실행할 동작 추가하기
+				// props.setState();
+			}
+		}
+		return () => {
+			if (timer) clearInterval(timer);
+		};
+	}, [timeLeft, isShow, currentRoutineIndex]);
+
+	// 다음 task 실행하는 함수
+	const goToNextRoutine = () => {
+		if (currentRoutineIndex < routine.length - 1) {
+			setNewRoutine([...newRoutine, routine[currentRoutineIndex + 1]]);
 			setCurrentRoutineIndex(currentRoutineIndex + 1);
 			setTimeLeft(routine[currentRoutineIndex + 1].totalSeconds * 1000);
-			setContent(routine[currentRoutineIndex + 1].name);
+			setAnimationKey((prevKey) => prevKey + 1);
 		}
-	}, [timeLeft, currentRoutineIndex, routine]);
-
-	// 남은 시간 업데이트
-	useEffect(() => {
-		const timer = setInterval(() => {
-			setTimeLeft((prevTime) => prevTime - 1000);
-		}, 1000);
-		return () => clearInterval(timer);
-	}, []);
+	};
 
 	// 밀리초 단위의 시간을 분:초 형식으로 변환
 	const formatTime = (ms: number) => {
@@ -109,38 +160,46 @@ const CustomRainbow = () => {
 			.padStart(2, "0")}`;
 	};
 
+
 	return (
 		<>
 			<CenteredContainer>
+				<ReadyTimer show={isShow}>
+					{readyTime > 0 ? readyTime : "Start!"}
+				</ReadyTimer>
 				<Wrapper>
-					{routine.map((item, index) => (
-						<RainbowDiv
-							key={index}
-							customDuration={item.totalSeconds}
-							customColor={item.color}
-							width={[33.3, 50, 66.6, 83.3, 100][index]}
-							height={`calc(37.5px * ${[3, 4.5, 6, 7.6, 9.1][index]})`}
-							left={[33.35, 25, 16.7, 8.35, 0][index]}
-							zIndex={routine.length - index}
-							noRotate={index !== currentRoutineIndex}
-						/>
-					))}
-					<RainbowDiv
-						customDuration={0}
-						customColor="white"
-						width={16}
-						height="calc(37.5px * 1.5)"
-						left={42}
-						noRotate={true}
-						zIndex={999}
-					/>
+					{!isShow && (
+						<>
+							{newRoutine.map((item, index) => (
+								<RainbowDiv
+									key={index + animationKey}
+									customDuration={item.totalSeconds}
+									customColor={item.color}
+									width={[33.3, 50, 66.6, 83.3, 100][index]}
+									height={`calc(37.5px * ${[3, 4.5, 6, 7.6, 9.1][index]})`}
+									left={[33.35, 25, 16.7, 8.35, 0][index]}
+									zIndex={newRoutine.length - index}
+									noRotate={index !== currentRoutineIndex}
+								/>
+							))}
+
+							<RainbowDiv
+								customDuration={0}
+								customColor="white"
+								width={16}
+								height="calc(37.5px * 1.5)"
+								left={42}
+								noRotate={true}
+								zIndex={999}
+							/>
+						</>
+					)}
 				</Wrapper>
 				<TaskText>
-					{/* {currentRoutineIndex < routine.length
-						? routine[currentRoutineIndex].name
-						: "완료"} */}
+					{newRoutine[currentRoutineIndex].name}
 				</TaskText>
-				{/* <StartTimerBtn onClick={() => setCurrentRoutineIndex(0)} /> */}
+				<LeftTimeText>for {formatTime(timeLeft)}</LeftTimeText>
+        <button>pause</button>
 			</CenteredContainer>
 		</>
 	);

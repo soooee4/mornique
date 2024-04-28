@@ -60,16 +60,6 @@ const RainbowDiv = styled.div<{
 	background-color: ${(props) => props.customColor};
 	z-index: ${(props) => props.zIndex};
 `;
-
-// const rainbows = [
-//   { customDuration: 3.1, customColor: "#6A4C93", width: 100, height: "calc(37.5px * 9.1)" },
-//   { customDuration: 2.6, customColor: "#1982C4", width: 83.3, height: "calc(37.5px * 7.6)", left: 8.35 },
-//   { customDuration: 2.2, customColor: "#8AC926", width: 66.6, height: "calc(37.5px * 6)", left: 16.7 },
-//   { customDuration: 1.7, customColor: "#FFCA3A", width: 50, height: "calc(37.5px * 4.5)", left: 25 },
-//   { customDuration: 1.2, customColor: "#FF595E", width: 33.3, height: "calc(37.5px * 3)", left: 33.35 },
-//   { customDuration: 0, customColor: "white", width: 16, height: "calc(37.5px * 1.5)", left: 42, noRotate: true }
-// ];
-
 const CustomFirstRainbow = (props: any) => {
 	const routine: Routine[] = JSON.parse(
 		window.localStorage.getItem("routines") || "[]"
@@ -99,7 +89,7 @@ const CustomFirstRainbow = (props: any) => {
 						zIndex={999}
 					/>
 				</Wrapper>
-        <StartTimerBtn />
+        <StartTimerBtn onClick={props.onClick}/>
 			</CenteredContainer>
 		</>
 	);
