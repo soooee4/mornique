@@ -12,17 +12,18 @@ const Wrapper = styled.button`
 
 const Text = styled.span`
 	color: #0000007a;
-	font-size: 43px; 
-  font-weight: bold; 
-  margin-right: 11px;
+	font-size: 43px;
+	font-weight: bold;
+	margin-right: 11px;
 `;
 
 const GradientText = styled.span<GradientTextProps>`
-	  background: ${(props) => props.gradient};
+	letter-spacing: 2px;
+	background: ${(props) => props.gradient};
 	-webkit-background-clip: text;
 	-webkit-text-fill-color: transparent;
 	font-size: 45px;
-	font-weight: bold; 
+	font-weight: bold;
 `;
 
 interface StartTimerBtnProps {

@@ -29,6 +29,7 @@ const CenteredContainer = styled.div`
 	width: 100vw;
 	min-width: calc(37.5px * 18);
 	overflow: hidden;
+	
 `;
 
 // Wrapper 스타일 정의
@@ -42,16 +43,23 @@ const Wrapper = styled.div`
 	overflow: hidden;
 `;
 
-// TaskText 스타일 정의
 const TaskText = styled.p`
 	display: block;
 	font-size: 25px;
+	margin-top: 50px;
 `;
 
-// TaskText 스타일 정의
 const LeftTimeText = styled.p`
 	display: block;
 	font-size: 25px;
+	margin-right: 30px;
+`;
+
+// 소요 시간, 일시정지 버튼 배치를 위한 div
+const Info = styled.div`
+	display: flex;
+	justify-content: center;
+	margin-top: -20px;
 `;
 
 const ReadyTimer = styled.span<ReadyTimerProps>`
@@ -59,6 +67,14 @@ const ReadyTimer = styled.span<ReadyTimerProps>`
 	color: black;
 	display: ${(props) => (props.show ? "block" : "none")};
 `;
+
+// 일시정지 버튼
+const PauseButton = styled.button`
+	font-size: 20px;
+	border: none;
+	background-color: transparent;
+	cursor: pointer;
+`
 
 // RainbowDiv 스타일 정의
 const RainbowDiv = styled.div<{
@@ -104,6 +120,8 @@ const CustomRainbow = (props: any) => {
 	const [readyTime, setReadyTime] = useState(5); // 루틴 시작 전 5초 타이머
 	const [isShow, setIsShow] = useState(true); // 5초 타이머 노출 여부
 	const [animationKey, setAnimationKey] = useState(0); // 사용자 설정 타이머 시작 여부
+	const [isPause, setIsPause] = useState(false);	// 타이머 일시정지 여부
+
 
 	useEffect(() => {
 		const interval = setInterval(() => {
@@ -164,10 +182,10 @@ const CustomRainbow = (props: any) => {
 	return (
 		<>
 			<CenteredContainer>
-				<ReadyTimer show={isShow}>
-					{readyTime > 0 ? readyTime : "Start!"}
-				</ReadyTimer>
 				<Wrapper>
+				<ReadyTimer show={isShow}>
+					{readyTime > 0 ? readyTime : "START"}
+				</ReadyTimer>
 					{!isShow && (
 						<>
 							{newRoutine.map((item, index) => (
@@ -198,8 +216,11 @@ const CustomRainbow = (props: any) => {
 				<TaskText>
 					{newRoutine[currentRoutineIndex].name}
 				</TaskText>
+				<Info>
 				<LeftTimeText>for {formatTime(timeLeft)}</LeftTimeText>
-        <button>pause</button>
+        <PauseButton>{isPause ? "▶" : "❚❚"}</PauseButton>
+				</Info>
+				
 			</CenteredContainer>
 		</>
 	);

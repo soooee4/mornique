@@ -2,24 +2,23 @@ import styled from "styled-components";
 import message from "./message";
 
 const Wrapper = styled.button`
-  margin-top: 50px;
+	margin-top: 50px;
 	background-color: transparent;
 	border: none;
 	cursor: pointer;
 	display: flex;
 	align-items: center;
-
 `;
 
 const Text = styled.span`
 	color: #0000007a;
-	font-size: 43px; 
-  font-weight: bold; 
-  margin-right: 11px;
-
+	font-size: 43px;
+	font-weight: bold;
+	margin-right: 11px;
 `;
 
 const GradientText = styled.span`
+	letter-spacing: 2px;
 	background: linear-gradient(
 		90deg,
 		#6a4c93 0%,
@@ -31,7 +30,7 @@ const GradientText = styled.span`
 	-webkit-background-clip: text;
 	-webkit-text-fill-color: transparent;
 	font-size: 45px;
-	font-weight: bold; 
+	font-weight: bold;
 `;
 
 interface LogoBtnProps {
@@ -39,7 +38,6 @@ interface LogoBtnProps {
 }
 
 const LogoBtn = (props: LogoBtnProps) => {
-
 	return (
 		<Wrapper onClick={props.onClick}>
 			<Text>{message.LOGO_TEXT} </Text>
