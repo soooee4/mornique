@@ -128,22 +128,28 @@ const CustomRainbow = (props: any) => {
 	const routine: Routine[] = JSON.parse(
 		window.localStorage.getItem("routines") || "[]"
 	);
-
+	// 첫 번째 루틴을 시작으로 새 루틴 배열 설정
 	const [newRoutine, setNewRoutine] = useState<Routine[]>([routine[0]] || []);
-	const [currentRoutineIndex, setCurrentRoutineIndex] = useState(0); // 처리중인 현재 루틴의 인덱스
-
+	// 처리중인 현재 루틴의 인덱스
+	const [currentRoutineIndex, setCurrentRoutineIndex] = useState(0);
+	// 각 task의 남은 시간
 	const [timeLeft, setTimeLeft] = useState(
 		newRoutine[currentRoutineIndex]
 			? newRoutine[currentRoutineIndex].totalSeconds * 1000
 			: 0
 	);
+	// 루틴 시작 전 준비 시간(5초)
+	const [readyTime, setReadyTime] = useState(5);
+	// ReadyTimer 노출 여부
+	const [isShow, setIsShow] = useState(true);
+	// 애니메이션 조작
+	const [animationKey, setAnimationKey] = useState(0);
+	// 타이머 일시정지 여부
+	const [isPause, setIsPause] = useState(false);
+	// 애니메이션 참조 배열 초기화
+	const animationRefs = useRef<Array<HTMLDivElement | null>>([]);
 
-	const [readyTime, setReadyTime] = useState(5); // 루틴 시작 전 5초 타이머
-	const [isShow, setIsShow] = useState(true); // 5초 타이머 노출 여부
-	const [animationKey, setAnimationKey] = useState(0); // 사용자 설정 타이머 시작 여부
-	const [isPause, setIsPause] = useState(false); // 타이머 일시정지 여부
-	const animationRefs = useRef<Array<HTMLDivElement | null>>([]); // 애니메이션 참조 배열 초기화
-
+	// 일시정지 상태가 바뀔 때마다 애니메이션 재생 여부 관리
 	useEffect(() => {
 		if (isPause) {
 			animationRefs.current.forEach((el) => {
@@ -156,11 +162,12 @@ const CustomRainbow = (props: any) => {
 		}
 	}, [isPause]);
 
-	// PauseButton 노출 제어
+	// 일시정지 버튼 노출 제어
 	const togglePause = () => {
 		setIsPause(!isPause);
 	};
 
+	// ReadyTimer  (1초마다 감소)
 	useEffect(() => {
 		const interval = setInterval(() => {
 			if (!isPause && isShow) {
@@ -176,21 +183,28 @@ const CustomRainbow = (props: any) => {
 		return () => clearInterval(interval);
 	}, [isShow, isPause, readyTime]);
 
+	// 각 task 타이머
 	useEffect(() => {
 		let timer: number | undefined;
 
+		// 남은 시간이 0보다 크고 ReadyTimer가 비노출 상태일 경우
 		if (timeLeft > 0 && !isShow) {
+			// 일시 정지 상태가 아닐 때
 			if (!isPause) {
+				// 1초마다 남은 시간을 1초 감소시킴
 				timer = window.setInterval(() => {
 					setTimeLeft((prevTime) => prevTime - 1000);
 				}, 1000);
 			}
+			// 남은 시간이 0 이하인 경우 (현재 task 시간이 종료된 경우)
 		} else if (timeLeft <= 0) {
+			// 설정된 타이머가 있으면 해당 타이머 제거
 			if (timer) clearInterval(timer);
+			// 루틴의 마지막 task가 아니라면 다음 루틴으로 이동
 			if (currentRoutineIndex < routine.length - 1) {
 				goToNextRoutine();
 			} else {
-				// 모든 루틴 완료되면 실행할 동작 추가하기
+				// * 모든 루틴 완료되면 실행할 동작 추가하기
 				// props.setState(); 등의 완료 처리 로직
 			}
 		}
@@ -241,7 +255,6 @@ const CustomRainbow = (props: any) => {
 									ref={(el) => (animationRefs.current[index] = el)}
 								/>
 							))}
-
 							<RainbowDiv
 								customDuration={0}
 								customColor="white"
@@ -254,11 +267,13 @@ const CustomRainbow = (props: any) => {
 						</>
 					)}
 				</Wrapper>
+				{/* 현재 task명 (routine.name)*/}
 				<TaskText color={newRoutine[currentRoutineIndex].color}>
 					{newRoutine[currentRoutineIndex].name}
 				</TaskText>
 				{/* <Info> */}
 				<LeftTimeText>for {formatTime(timeLeft)}</LeftTimeText>
+				{/* 일시 정지/재생 버튼(타이머가 진행 중일 때만 노출) */}
 				<PauseButton
 					onClick={togglePause}
 					isVisible={
