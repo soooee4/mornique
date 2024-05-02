@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-import { start } from "repl";
+import React, { useState, useEffect, useRef } from "react";
 import styled, { css, keyframes } from "styled-components";
 
 interface Routine {
@@ -10,6 +9,10 @@ interface Routine {
 
 interface ReadyTimerProps {
 	show: boolean;
+}
+
+interface PauseButtonProps {
+	isVisible: boolean;
 }
 
 // rotate 애니메이션 키 프레임 정의
@@ -29,7 +32,6 @@ const CenteredContainer = styled.div`
 	width: 100vw;
 	min-width: calc(37.5px * 18);
 	overflow: hidden;
-	
 `;
 
 // Wrapper 스타일 정의
@@ -45,14 +47,18 @@ const Wrapper = styled.div`
 
 const TaskText = styled.p`
 	display: block;
-	font-size: 25px;
-	margin-top: 50px;
+	font-size: 28px;
+	font-weight: bold;
+	color: ${(props) => props.color};
+	margin-top: 70px;
 `;
 
 const LeftTimeText = styled.p`
+	color: #1919199c;
 	display: block;
-	font-size: 25px;
-	margin-right: 30px;
+	font-size: 22px;
+	font-weight: bold;
+	margin-top: 10px;
 `;
 
 // 소요 시간, 일시정지 버튼 배치를 위한 div
@@ -69,12 +75,22 @@ const ReadyTimer = styled.span<ReadyTimerProps>`
 `;
 
 // 일시정지 버튼
-const PauseButton = styled.button`
-	font-size: 20px;
+const PauseButton = styled.button<PauseButtonProps>`
+	visibility: ${(props) => !props.isVisible && "hidden"};
+	border-radius: 50%;
+	padding: 4px 6px;
 	border: none;
 	background-color: transparent;
 	cursor: pointer;
-`
+	min-width: 40px;
+	height: 40px;
+	font-size: 20px;
+	color: #777777;
+	&:hover {
+		background-color: #f0f0f0;
+		color: #383838;
+	}
+`;
 
 // RainbowDiv 스타일 정의
 const RainbowDiv = styled.div<{
@@ -85,6 +101,7 @@ const RainbowDiv = styled.div<{
 	left?: number;
 	zIndex: number;
 	noRotate?: boolean;
+	isLast?: boolean;
 }>`
 	border-radius: 375px 375px 0 0;
 	position: absolute;
@@ -93,7 +110,9 @@ const RainbowDiv = styled.div<{
 	animation: ${(props) =>
 		!props.noRotate
 			? css`
-					${rotate} ${props.customDuration}s forwards
+					${rotate} ${props.customDuration}s linear ${props.isLast
+						? "forwards"
+						: "infinite"}
 			  `
 			: "none"};
 	transform: ${(props) => (props.noRotate ? "rotate(0)" : "rotate(-180deg)")};
@@ -106,7 +125,9 @@ const RainbowDiv = styled.div<{
 
 const CustomRainbow = (props: any) => {
 	// 로컬 스토리지에 저장된 routine값
-	const routine: Routine[] = JSON.parse(window.localStorage.getItem("routines") || "[]");
+	const routine: Routine[] = JSON.parse(
+		window.localStorage.getItem("routines") || "[]"
+	);
 
 	const [newRoutine, setNewRoutine] = useState<Routine[]>([routine[0]] || []);
 	const [currentRoutineIndex, setCurrentRoutineIndex] = useState(0); // 처리중인 현재 루틴의 인덱스
@@ -120,44 +141,63 @@ const CustomRainbow = (props: any) => {
 	const [readyTime, setReadyTime] = useState(5); // 루틴 시작 전 5초 타이머
 	const [isShow, setIsShow] = useState(true); // 5초 타이머 노출 여부
 	const [animationKey, setAnimationKey] = useState(0); // 사용자 설정 타이머 시작 여부
-	const [isPause, setIsPause] = useState(false);	// 타이머 일시정지 여부
+	const [isPause, setIsPause] = useState(false); // 타이머 일시정지 여부
+	const animationRefs = useRef<Array<HTMLDivElement | null>>([]); // 애니메이션 참조 배열 초기화
 
+	useEffect(() => {
+		if (isPause) {
+			animationRefs.current.forEach((el) => {
+				if (el) el.style.animationPlayState = "paused";
+			});
+		} else {
+			animationRefs.current.forEach((el) => {
+				if (el) el.style.animationPlayState = "running";
+			});
+		}
+	}, [isPause]);
+
+	// PauseButton 노출 제어
+	const togglePause = () => {
+		setIsPause(!isPause);
+	};
 
 	useEffect(() => {
 		const interval = setInterval(() => {
-			setReadyTime((currentReadyTime) => {
-				if (currentReadyTime <= 1) {
-					clearInterval(interval); 
-					setTimeout(() => setIsShow(false), 1000);
-					return 0;
+			if (!isPause && isShow) {
+				if (readyTime > 1) {
+					setReadyTime(readyTime - 1);
+				} else if (readyTime === 1) {
+					setReadyTime(0);
+					setTimeout(() => setIsShow(false), 900);
 				}
-				return currentReadyTime - 1;
-			});
-		}, 1000);
+			}
+		}, 900);
 
 		return () => clearInterval(interval);
-	}, []);
+	}, [isShow, isPause, readyTime]);
 
 	useEffect(() => {
 		let timer: number | undefined;
 
 		if (timeLeft > 0 && !isShow) {
-			timer = window.setInterval(() => {
-				setTimeLeft((prevTime) => prevTime - 1000);
-			}, 1000);
+			if (!isPause) {
+				timer = window.setInterval(() => {
+					setTimeLeft((prevTime) => prevTime - 1000);
+				}, 1000);
+			}
 		} else if (timeLeft <= 0) {
 			if (timer) clearInterval(timer);
 			if (currentRoutineIndex < routine.length - 1) {
 				goToNextRoutine();
 			} else {
 				// 모든 루틴 완료되면 실행할 동작 추가하기
-				// props.setState();
+				// props.setState(); 등의 완료 처리 로직
 			}
 		}
 		return () => {
 			if (timer) clearInterval(timer);
 		};
-	}, [timeLeft, isShow, currentRoutineIndex]);
+	}, [timeLeft, isShow, isPause, currentRoutineIndex]);
 
 	// 다음 task 실행하는 함수
 	const goToNextRoutine = () => {
@@ -178,14 +218,13 @@ const CustomRainbow = (props: any) => {
 			.padStart(2, "0")}`;
 	};
 
-
 	return (
 		<>
 			<CenteredContainer>
 				<Wrapper>
-				<ReadyTimer show={isShow}>
-					{readyTime > 0 ? readyTime : "START"}
-				</ReadyTimer>
+					<ReadyTimer show={isShow}>
+						{readyTime > 0 ? readyTime : "START"}
+					</ReadyTimer>
 					{!isShow && (
 						<>
 							{newRoutine.map((item, index) => (
@@ -198,6 +237,8 @@ const CustomRainbow = (props: any) => {
 									left={[33.35, 25, 16.7, 8.35, 0][index]}
 									zIndex={newRoutine.length - index}
 									noRotate={index !== currentRoutineIndex}
+									isLast={index === newRoutine.length - 1}
+									ref={(el) => (animationRefs.current[index] = el)}
 								/>
 							))}
 
@@ -213,14 +254,22 @@ const CustomRainbow = (props: any) => {
 						</>
 					)}
 				</Wrapper>
-				<TaskText>
+				<TaskText color={newRoutine[currentRoutineIndex].color}>
 					{newRoutine[currentRoutineIndex].name}
 				</TaskText>
-				<Info>
+				{/* <Info> */}
 				<LeftTimeText>for {formatTime(timeLeft)}</LeftTimeText>
-        <PauseButton>{isPause ? "▶" : "❚❚"}</PauseButton>
-				</Info>
-				
+				<PauseButton
+					onClick={togglePause}
+					isVisible={
+						!isShow &&
+						currentRoutineIndex === newRoutine.length - 1 &&
+						timeLeft > 0
+					}
+				>
+					{isPause ? "▶" : "❚❚"}
+				</PauseButton>
+				{/* </Info> */}
 			</CenteredContainer>
 		</>
 	);
