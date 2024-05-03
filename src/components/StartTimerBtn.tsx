@@ -28,6 +28,7 @@ const GradientText = styled.span<GradientTextProps>`
 
 interface StartTimerBtnProps {
 	onClick?: () => void;
+  logoText?: string;
 }
 
 interface GradientTextProps {
@@ -35,14 +36,29 @@ interface GradientTextProps {
 }
 
 const StartTimerBtn = (props: StartTimerBtnProps) => {
+  
 	const routine = JSON.parse(window.localStorage.getItem("routines") || "[]");
 
-	const gradient = `linear-gradient(90deg, ${routine.map((item: any, index: number) => `${item.color || '#FFFFFF'} ${index * (100 / routine.length)}%`).join(', ')})`;
-	
+	const gradient = `linear-gradient(90deg, ${routine
+		.map(
+			(item: any, index: number) =>
+				`${item.color || "#FFFFFF"} ${index * (100 / routine.length)}%`
+		)
+		.join(", ")})`;
+
+
 	return (
 		<Wrapper onClick={props.onClick}>
-			<Text>{message.START_TIMER_TEXT} </Text>
-			<GradientText gradient={gradient}>{message.LOGO}</GradientText>
+			{props.logoText === "start" ? (
+				<>
+					<Text>{message.START_TIMER_TEXT} </Text>
+					<GradientText gradient={gradient}>{message.LOGO}</GradientText>
+				</>
+			) : (
+				<GradientText gradient={gradient}>
+					{message.FINISH_TEXT}
+				</GradientText>
+			)}
 		</Wrapper>
 	);
 };

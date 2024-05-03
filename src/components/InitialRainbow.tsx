@@ -11,6 +11,7 @@ const CenteredContainer = styled.div`
   width: 100vw;
   min-width: calc(37.5px * 18);
   overflow: hidden;
+  margin-top: -20px;
 `;
 
 const Wrapper = styled.div`

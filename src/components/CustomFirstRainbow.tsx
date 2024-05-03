@@ -8,6 +8,11 @@ interface Routine {
 	color: string;
 }
 
+interface CustomFirstRainbowProps {
+  logoText?: string;
+  onClick: () => void;
+}
+
 const CenteredContainer = styled.div`
 	display: flex;
 	flex-direction: column;
@@ -17,6 +22,7 @@ const CenteredContainer = styled.div`
 	width: 100vw;
 	min-width: calc(37.5px * 18);
 	overflow: hidden;
+  margin-top: -60px;
 `;
 
 const Wrapper = styled.div`
@@ -60,10 +66,14 @@ const RainbowDiv = styled.div<{
 	background-color: ${(props) => props.customColor};
 	z-index: ${(props) => props.zIndex};
 `;
-const CustomFirstRainbow = (props: any) => {
+
+
+const CustomFirstRainbow = (props: CustomFirstRainbowProps) => {
 	const routine: Routine[] = JSON.parse(
 		window.localStorage.getItem("routines") || "[]"
 	);
+
+console.log(props.onClick)
 
 	return (
 		<>
@@ -89,7 +99,10 @@ const CustomFirstRainbow = (props: any) => {
 						zIndex={999}
 					/>
 				</Wrapper>
-        <StartTimerBtn onClick={props.onClick}/>
+        <StartTimerBtn 
+          onClick={props.onClick}
+          logoText={props.logoText}
+          />
 			</CenteredContainer>
 		</>
 	);

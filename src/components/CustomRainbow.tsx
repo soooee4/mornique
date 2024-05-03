@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import styled, { css, keyframes } from "styled-components";
+import StartTimerBtn from "./StartTimerBtn";
 
 interface Routine {
 	name: string;
@@ -15,6 +16,11 @@ interface PauseButtonProps {
 	isVisible: boolean;
 }
 
+interface CustomRainbowProps {
+  setState: () => void;
+  setLogoText: () => void;
+}
+
 // rotate 애니메이션 키 프레임 정의
 const rotate = keyframes`
   from { transform: rotate(-180deg); }
@@ -28,9 +34,8 @@ const CenteredContainer = styled.div`
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
-	height: 100vh;
-	width: 100vw;
 	min-width: calc(37.5px * 18);
+	height:  100vh;           
 	overflow: hidden;
 `;
 
@@ -123,7 +128,7 @@ const RainbowDiv = styled.div<{
 	z-index: ${(props) => props.zIndex};
 `;
 
-const CustomRainbow = (props: any) => {
+const CustomRainbow = (props: CustomRainbowProps) => {
 	// 로컬 스토리지에 저장된 routine값
 	const routine: Routine[] = JSON.parse(
 		window.localStorage.getItem("routines") || "[]"
@@ -139,7 +144,7 @@ const CustomRainbow = (props: any) => {
 			: 0
 	);
 	// 루틴 시작 전 준비 시간(5초)
-	const [readyTime, setReadyTime] = useState(5);
+	const [readyTime, setReadyTime] = useState(3);
 	// ReadyTimer 노출 여부
 	const [isShow, setIsShow] = useState(true);
 	// 애니메이션 조작
@@ -206,6 +211,10 @@ const CustomRainbow = (props: any) => {
 			} else {
 				// * 모든 루틴 완료되면 실행할 동작 추가하기
 				// props.setState(); 등의 완료 처리 로직
+        setInterval(() => {
+          props.setLogoText();
+         
+        }, 1000)
 			}
 		}
 		return () => {

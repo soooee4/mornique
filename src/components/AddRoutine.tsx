@@ -263,7 +263,7 @@ const AddRoutine = (props: AddRoutineProps) => {
 	const [color, setColor] = useState("#FF595E");
 	const [routine, setRoutine] = useState<Routine[]>([]);
 
-	const orderList = ["1st", "2️nd", "3️rd", "4️th", "5️th"];
+	const orderList = ["①", "②", "③", "④", "⑤"];
 
 	// 랜더링 시 tasks 재조회
 	useEffect(() => {

@@ -10,6 +10,7 @@ const message: Message = {
   ERROR_EMPTY_TASK_NAME: "Don't forget to add a task name! 😉",
   ERROR_EMPTY_TASK_TIME: "Need a time for the task. 😊",
   ERROR_VALIDATION_TASK_TIME: "Please keep it under 30 min. 😮",
-  ERROR_VALIDATION_NUMBER_ONLY: "Please use the correct time format. 😊"
+  ERROR_VALIDATION_NUMBER_ONLY: "Please use the correct time format. 😊",
+  FINISH_TEXT: "Well done! Make it a nice day✨"
 }
 export default message;
