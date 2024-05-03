@@ -254,6 +254,7 @@ interface Routine {
 
 interface AddRoutineProps {
 	onClick: () => void;
+  state: string;
 }
 
 const AddRoutine = (props: AddRoutineProps) => {

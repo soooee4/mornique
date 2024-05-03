@@ -73,7 +73,7 @@ const CustomFirstRainbow = (props: CustomFirstRainbowProps) => {
 		window.localStorage.getItem("routines") || "[]"
 	);
 
-console.log(props.onClick)
+
 
 	return (
 		<>
