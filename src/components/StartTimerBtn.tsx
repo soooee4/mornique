@@ -2,7 +2,7 @@ import styled from "styled-components";
 import message from "./message";
 
 const Wrapper = styled.button`
-  margin-top: 50px;
+	margin-top: 50px;
 	background-color: transparent;
 	border: none;
 	cursor: pointer;
@@ -28,15 +28,14 @@ const GradientText = styled.span<GradientTextProps>`
 
 interface StartTimerBtnProps {
 	onClick?: () => void;
-  logoText?: string;
+	logoText?: string;
 }
 
 interface GradientTextProps {
-  gradient: string;
+	gradient: string;
 }
 
 const StartTimerBtn = (props: StartTimerBtnProps) => {
-  
 	const routine = JSON.parse(window.localStorage.getItem("routines") || "[]");
 
 	const gradient = `linear-gradient(90deg, ${routine
@@ -46,18 +45,15 @@ const StartTimerBtn = (props: StartTimerBtnProps) => {
 		)
 		.join(", ")})`;
 
-
 	return (
-		<Wrapper onClick={props.onClick}>
+		<Wrapper onClick={props.logoText === "start" ? props.onClick : undefined}>
 			{props.logoText === "start" ? (
 				<>
 					<Text>{message.START_TIMER_TEXT} </Text>
 					<GradientText gradient={gradient}>{message.LOGO}</GradientText>
 				</>
 			) : (
-				<GradientText gradient={gradient}>
-					{message.FINISH_TEXT}
-				</GradientText>
+				<GradientText gradient={gradient}>{message.FINISH_TEXT}</GradientText>
 			)}
 		</Wrapper>
 	);
