@@ -37,4 +37,4 @@ Mornique는 생산적인 아침을 위한 <strong>루틴 관리 타이머</stron
 
 ## Trouble shooting
 
-#### • [CSS로 무지개 애니메이션 구현하기](https://velog.io/@soooee/%E3%85%87%E3%85%87-7bmueice)
+#### • [CSS로 무지개 애니메이션 구현하기](https://velog.io/@soooee/CSS%EB%A1%9C-%EB%AA%A8%EC%96%91-%ED%83%80%EC%9D%B4%EB%A8%B8-%EA%B5%AC%ED%98%84%ED%95%98%EA%B8%B0)
