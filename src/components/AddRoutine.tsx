@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import { getRandomColor } from "../util";
 import message from "./message";
@@ -263,8 +263,15 @@ const AddRoutine = (props: AddRoutineProps) => {
 	const [seconds, setSeconds] = useState("");
 	const [color, setColor] = useState("#FF595E");
 	const [routine, setRoutine] = useState<Routine[]>([]);
+  const orderList = ["①", "②", "③", "④", "⑤"];
 
-	const orderList = ["①", "②", "③", "④", "⑤"];
+  const inputRef = useRef<any>();
+
+  // 랜더링 시 add task input에 포커스 되도록 처리
+  useEffect(() => {
+    inputRef.current && inputRef.current.focus();
+  }, [])
+
 
 	// 랜더링 시 tasks 재조회
 	useEffect(() => {
@@ -360,6 +367,7 @@ const AddRoutine = (props: AddRoutineProps) => {
 							onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
 								setTaskName(e.target.value)
 							}
+              ref={inputRef}
 						/>
 						<FlexContainer>
 							<TimeInput
