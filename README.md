@@ -38,3 +38,5 @@ Mornique는 생산적인 아침을 위한 <strong>루틴 관리 타이머</stron
 ## Trouble shooting
 
 #### • [CSS로 무지개 애니메이션 구현하기](https://velog.io/@soooee/CSS%EB%A1%9C-%EB%AA%A8%EC%96%91-%ED%83%80%EC%9D%B4%EB%A8%B8-%EA%B5%AC%ED%98%84%ED%95%98%EA%B8%B0)
+#### • [useRef Hook을 사용한 타이머 일시정지 기능 구현](https://velog.io/@soooee/React-%ED%83%80%EC%9D%B4%EB%A8%B8-%EC%9D%BC%EC%8B%9C%EC%A0%95%EC%A7%80-%EA%B8%B0%EB%8A%A5-%EA%B5%AC%ED%98%84-useRef%EB%A1%9C-%EC%95%A0%EB%8B%88%EB%A9%94%EC%9D%B4%EC%85%98-%EC%A0%9C%EC%96%B4%ED%95%98%EA%B8%B0)
+#### • [Typescript에서 타이머 함수 사용 시 타입 에러 해결](https://velog.io/@soooee/Typescript%EC%97%90%EC%84%9C-%ED%83%80%EC%9D%B4%EB%A8%B8-%ED%95%A8%EC%88%98-%EC%82%AC%EC%9A%A9-%EC%8B%9C-%ED%83%80%EC%9E%85-%EC%97%90%EB%9F%AC-%ED%95%B4%EA%B2%B0)
