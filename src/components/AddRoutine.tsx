@@ -1,9 +1,10 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import styled from "styled-components";
 import { getRandomColor } from "../util";
 import message from "./message";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import useRoutine from "../hooks/useRoutine";
 
 /* style 정의 */
 
@@ -254,7 +255,7 @@ interface Routine {
 
 interface AddRoutineProps {
 	onClick: () => void;
-  state: string;
+	state: string;
 }
 
 const AddRoutine = (props: AddRoutineProps) => {
@@ -262,27 +263,21 @@ const AddRoutine = (props: AddRoutineProps) => {
 	const [minutes, setMinutes] = useState("");
 	const [seconds, setSeconds] = useState("");
 	const [color, setColor] = useState("#FF595E");
-	const [routine, setRoutine] = useState<Routine[]>([]);
-  const orderList = ["①", "②", "③", "④", "⑤"];
+	// const [routine, setRoutine] = useState<Routine[]>([]);
+	const { routine, reindexRoutine } = useRoutine();
+	const orderList = ["①", "②", "③", "④", "⑤"];
 
-  const inputRef = useRef<any>();
+	const inputRef = useRef<any>();
 
-  // 랜더링 시 add task input에 포커스 되도록 처리
-  useEffect(() => {
-    inputRef.current && inputRef.current.focus();
-  }, [])
-
-
-	// 랜더링 시 tasks 재조회
+	// 랜더링 시 add task input에 포커스 되도록 처리
 	useEffect(() => {
-		const storedRoutine = JSON.parse(
-			window.localStorage.getItem("routines") || "[]"
-		) as Routine[];
-		setRoutine(storedRoutine);
-	}, []);
+		inputRef.current && inputRef.current.focus();
+	}, [])
 
 	// toast 호출 함수
-	const notify = (msg: string) => toast(`${msg}`);
+	const notify = (msg: string) => {
+		toast(`${msg}`)
+	};
 
 	// + 버튼 클릭 시 실행 함수
 	const onClickAddBtn = () => {
@@ -327,15 +322,6 @@ const AddRoutine = (props: AddRoutineProps) => {
 		}
 	};
 
-	const reindexRoutine = (updatedRoutine: Routine[]) => {
-		const reindexedRoutine = updatedRoutine.map((routine, index) => ({
-			...routine,
-			id: index + 1,
-		}));
-		setRoutine(reindexedRoutine);
-		window.localStorage.setItem("routines", JSON.stringify(reindexedRoutine));
-	};
-
 	const onClickColor = () => {
 		setColor(getRandomColor());
 	};
@@ -367,7 +353,7 @@ const AddRoutine = (props: AddRoutineProps) => {
 							onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
 								setTaskName(e.target.value)
 							}
-              ref={inputRef}
+							ref={inputRef}
 						/>
 						<FlexContainer>
 							<TimeInput
